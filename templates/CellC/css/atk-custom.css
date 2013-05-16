@@ -1,0 +1,39 @@
+/* 
+    Document   : atk-custom
+    Created on : 16 Jan 2013, 3:16:48 PM
+    Author     : WRheeder
+    Description:
+        Purpose of the stylesheet follows.
+*/
+*{font-family: "Bryant-regular";}
+h1 {font-size:2.5em;font-family: "Bryant-bold";}
+h2 {font-size:1.875em;font-family: "Bryant-medium";}
+p {font-size:0.875em;font-family: "Bryant-regular";}
+
+body {
+    margin :40px;
+    background-color: #fff;
+    -webkit-box-shadow: 0 0 8px #D0D0D0;
+    margin-left: 40px;
+    margin-right: 40px;
+    font-size: 13px/20px;
+    font-family:"Bryant-regular";
+    color: #4F5155;
+}
+.span4 h1{
+    text-align: center;
+}
+.ui-layout-pane .ui-layout-pane-south{
+    text-align: center;
+}
+#welcome_user{
+    text-align: right;
+}
+#render_time{
+    text-align: center;
+}
+
+.ui-layout-pane-center{
+    border: 1px #D0D0D0;
+    -webkit-box-shadow: 0 0 8px #D0D0D0;
+}

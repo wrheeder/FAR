@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    <html>
+<head>
+    <title>CellC Part Movement Tracker</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="<?template?>images/favicon.ico<?/?>" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="<?template?>css/jquery-ui.css<?/?>" />
+    <link rel="stylesheet" type="text/css" href="<?template?>css/atk-main.css<?/?>" />
+    <link rel="stylesheet" type="text/css" href="<?template?>css/atk-custom.css<?/?>" />
+    <?$js_include?>
+    <!--[if IE 8]>
+            <link rel="stylesheet" type="text/css" href="<?template?>css/ie8.css<?/?>"/>
+            <script type="text/javascript" src="<?template?>css/ie8.js<?/?>"></script>
+    <![endif]-->
+    <script type="text/javascript">
+        $(function(){
+                <?$document_ready?>
+            });
+    </script>
+</head>
+<body>
+    <div class="pane ui-layout-north">
+        <div class="atk-row">
+
+            <div class="span4">.<?Menu?><?/?></div>
+            <div class="span4"><h1>CellC Part Movement Process</h1></div>
+            <div class="span4"><?logo?><div  id='cellc_logo' align="left" height="80" width="180" class="float-right">
+                    <a 
+                        href="<?page?>index<?/?>"><img src="<?template?>images/logo.png<?/?>" /></a></div><?/logo?></div>
+        </div>
+    </div>
+    <div class="pane ui-layout-center">
+        <?$Content?>
+    </div>
+    <div class="pane ui-layout-west">
+        <div id="tree_holder" class="demo" style="height:100px;">
+            <?tree?><?/tree?>
+        </div>
+    </div>
+    <div class="pane ui-layout-south">
+        <div class="atk-row">
+            <div class="span4">Rollout Tool Copyright CellC</div>
+            <div class="span4" id="render_time"><?run_time?><?/run_time?></div>
+            <div class="span4" id="welcome_user"><?$Welcome?></div>
+        </div>
+
+    </div>
+    <div id="mmenu" style="height:30px; overflow:auto;">
+
+    </div>
+    <div id="atk-growl-holder" class="atk-growl"></div>
+</body>
+</html>
