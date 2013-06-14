@@ -94,7 +94,7 @@ class page_index extends Page_ApplicationPage {
         }
         
 
-        $tab->addTab('TestProduction');
+        $tabs->addTab('TestProduction');
         
         $form->addSubmit();
 
