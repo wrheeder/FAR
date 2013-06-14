@@ -1,8 +1,8 @@
 <?php
 
-class Model_TertiaryCategory extends Model_Table {
+class Model_PrimaryCategory extends Model_Table {
 
-    public $entity_code = 'tertiary_category';
+    public $entity_code = 'primary_category';
 
     function init() {
         parent::init();

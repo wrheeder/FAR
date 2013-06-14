@@ -1,0 +1,128 @@
+<head>
+    <title>CellC Part Movement Tracker</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="<?template?>images/favicon.ico<?/?>" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="<?template?>css/jquery-ui.css<?/?>" />
+    <link rel="stylesheet" type="text/css" href="<?template?>css/atk-main.css<?/?>" />
+    <link rel="stylesheet" type="text/css" href="<?template?>css/atk-custom.css<?/?>" />
+
+    <style>
+        @media print,screen {
+            @page {
+                size: A4 portrait;
+                margin:0.01cm;
+            }
+            body{
+                -webkit-print-color-adjust:exact;
+            }
+            table .item_list_headers th{
+                background: grey;
+                color: white;
+                border-left: 1pt lightgray solid;
+                height:45px;
+            }
+            table .notes td{
+                height:90px;
+                border-bottom: 1pt darkgrey solid;
+                text-align: left;
+            }
+            .item_list_detail td{
+                text-align: left;
+                border-left: 1pt darkgrey solid;
+                border-right: 1pt darkgrey solid;
+            }
+            .rowodd
+            {
+                background-color: white;	
+            }
+
+            .roweven
+            {
+                background-color: lightgrey;
+            }
+            .items-table{
+                border: 1pt lightgrey solid;
+            }
+        }
+    </style>
+</head>
+<body>   
+    <?Content?>
+    <?myLister?>
+    <table width="100%">
+        <tr class="">
+            <td width ="33%"><h1><strong><?tn_code?>TN Code<?/?></strong></h1></td>
+            <td width ="33%"></td>
+            <td width ="33%"><div id='cellc_logo' align="right" height="80" width="180" class="float-right"><a href="./Templates/CellC/images/logo.png"><img alt="" src="./Templates/CellC/images/logo.png" /></a></div></td>
+        </tr>
+
+        <tr class="">
+            <td width ="35%";>DATE</td>
+            <td width ="10%">:</td>
+            <td width ="55%"><?date_created?>N/A<?/?></td>
+        </tr>
+        
+        <tr class="">
+            <td width ="35%">DESTINATION STORE</td>
+            <td width ="10%">:</td>
+            <td width ="55%"><?to_store?>N/A<?/?></td>
+        </tr>
+    </table>
+    <hr />
+    </br>
+    </br>
+    <table width=100%" class="items-table">
+        <tr class="item_list_headers">
+            <th width="15%">PART NUMBER</th>
+            <th width="20%">DESCRIPTION</th>
+            <th width="10%">SERIAL</th>
+            <th width="3%">UOM</th>
+            <th width="3%">QTY</th>
+            <th width="3%">STATUS</th>
+            <th width="6%">WARANTEE</th>
+            <th width="30%">COMMENT</th>
+        </tr>
+        <tr class="notes">
+            <td width="100%" colspan=8><?notes?>....<?/?></td>
+        </tr>
+        
+
+        <?rows?>
+        <?row?>
+        <tr class="item_list_detail row<?$odd_even?>">
+            <td width="15%"><?row_cnt?>items_id<?/?>.  <?items?>N/A<?/?></td>
+            <td width="20%"><?description?>N/A<?/?></td>
+            <td width="10%"><?serial?>N/A<?/?></td>
+            <td width="3%"><?uom?>N/A<?/?></td>
+            <td width="3%"><?qty?>N/A<?/?></td>
+            <td width="3%"><?part_status?>N/A<?/?></td>
+            <td width="6%"><?warrantee?>N/A<?/?></td>
+            <td width="30%"><?comment?>N/A<?/?></td>
+        </tr>
+        <?/?>
+        <?/rows?>
+
+        
+    </table>
+    </br>
+    </br>
+    <table width='100%' class='items-table'>
+        <tr class="">
+            <td width ="35%";>DATE</td>
+            <td width ="10%">:</td>
+            <td width ="55%"><?date_changed?>N/A<?/?></td>
+        </tr>
+        <tr class="">
+            <td width ="35%">BOOKED IN BY</td>
+            <td width ="10%">:</td>
+            <td width ="55%"><?user?>N/A<?/?></td>
+        </tr>
+        <tr class="">
+            <td width ="35%">STORE</td>
+            <td width ="10%">:</td>
+            <td width ="55%"><?store_name?>N/A<?/?></td>
+        </tr>
+    </table>
+    <?/myLister?>
+<?/?>
+</body>

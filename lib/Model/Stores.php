@@ -11,6 +11,7 @@ class Model_Stores extends Model_Table {
         $this->hasOne('Stores','parent_store_id','store_name');
         $this->add('dynamic_model\Controller_AutoCreator');
         $this->hasMany('UserStores','stores_id');
+        $this->hasMany('Locators');
         if($this->owner->owner instanceof Model_Stores && $this->owner->owner->store_type){
             $this->addCondition('store_type','Regional Store');
         }elseif($this->store_type){
