@@ -93,8 +93,6 @@ class page_index extends Page_ApplicationPage {
            // $items->js(true)->hide();
         }
         
-
-        $tabs->addTab('TestProduction');
         
         $form->addSubmit();
 
