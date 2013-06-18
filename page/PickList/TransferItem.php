@@ -12,7 +12,7 @@ class Page_PickList_TransferItem extends Page {
         $this->api->stickyGet('home_store');
         $this->api->stickyGet('home_store_type');
         $this->api->stickyGet('notes');
-        
+
         $f = $this->add('Form');
         $f->addField('Hidden', 'sel_store')->set($_GET['sel_store']);
         $f->addField('ReadOnlySave', 'tn_code')->set($_GET['tn_code']);
@@ -41,9 +41,17 @@ class Page_PickList_TransferItem extends Page {
         ////
 
         $out = array();
-        foreach ($dest_stores as $dest_store) {
-            if ($dest_store['parent_store_id'] != $_GET['sel_store']) {
-                $out[$dest_store['id']] = $dest_store['store_name'];
+        if ($_GET['Destination_Store']) {
+           foreach ($dest_stores as $dest_store) {
+                if ($dest_store['id'] == $_GET['Destination_Store']) {
+                    $out[$dest_store['id']] = $dest_store['store_name'];
+                }
+            } 
+        } else {
+            foreach ($dest_stores as $dest_store) {
+                if ($dest_store['parent_store_id'] != $_GET['sel_store']) {
+                    $out[$dest_store['id']] = $dest_store['store_name'];
+                }
             }
         }
         //loading sites
@@ -62,14 +70,14 @@ class Page_PickList_TransferItem extends Page {
                 $out[$site['id']] = $site['store_name'];
             }
         }
-        
+
         //
 
         $dd = $f->addField('Dropdown', 'Destination Store');
 
 
         $dd->setValueList($out);
-        if($_GET['Destination_Store'])
+        if ($_GET['Destination_Store'])
             $dd->set($_GET['Destination_Store']);
         //if ($_GET['Destination_Store'])
         //$dd->js(true)->attr('disabled', true);
@@ -78,7 +86,7 @@ class Page_PickList_TransferItem extends Page {
         $f->addSeparator();
         $m_transfer_notes = $this->add('Model_ItemTransferForm');
         $m_items = $f->setModel('ItemsTrf');
-        $f->addField('Text','Comment');
+        $f->addField('Text', 'Comment');
         //$f->getElement('parts_catalogue')->js(true)->focus();
         $f->getElement('stores_id')->js(true)->closest('.atk-form-row-dropdown')->hide();
         $f->getElement('locators')->js(true)->closest('.atk-form-row-line');
@@ -86,13 +94,13 @@ class Page_PickList_TransferItem extends Page {
         $m_item_list = $this->add('Model_ItemTrfList');
         $tn_code_id = $m_transfer_notes->getTransferFormId($f->getElement('tn_code')->get());
         $m_item_list->addCondition('transfer_notes_id', $tn_code_id);
-        $m_i=$m_item_list->join('items');
+        $m_i = $m_item_list->join('items');
         $m_i->addField('serial');
         $item_list->setModel($m_item_list);
         $pc_info = $f->add('View_PartsCatalogueInfo');
-        
-        $f_status_dd=$f->addField('DropDown','Destination Status');
-        $m_status=$f_status_dd->setModel('PartStatus',array('id','status'));
+
+        $f_status_dd = $f->addField('DropDown', 'Destination Status');
+        $m_status = $f_status_dd->setModel('PartStatus', array('id', 'status'));
         $f->add('Order')->move($pc_info, 'after', 'parts_catalogue')->now();
 
         $item_list->addClass("zebra bordered");
@@ -143,7 +151,7 @@ class Page_PickList_TransferItem extends Page {
             //->js('click', $dd->js(true)->attr('disabled', false));
             $js = array();
             $orig_qty = $f->getElement('qty')->get();
-            $item_id = $f->model->setStore($f->getElement('sel_store')->get(), $f->getElement('parts_catalogue_id')->get(), $f->getElement('serial')->get(), $f->getElement('Destination_Store')->get(), $f->getElement('qty')->get(), $f->getElement('tn_code')->get(), $f->getElement('locators_id')->get(), $f->getElement('locators')->get(),$f->getElement('part_status_id')->get(),$f_status_dd->get());
+            $item_id = $f->model->setStore($f->getElement('sel_store')->get(), $f->getElement('parts_catalogue_id')->get(), $f->getElement('serial')->get(), $f->getElement('Destination_Store')->get(), $f->getElement('qty')->get(), $f->getElement('tn_code')->get(), $f->getElement('locators_id')->get(), $f->getElement('locators')->get(), $f->getElement('part_status_id')->get(), $f_status_dd->get());
             //$f->update();
 //            $m_transfer_notes->debug();
             $m_transfer_notes->tryLoadBy('tn_code', $f->getElement('tn_code')->get());
@@ -173,8 +181,8 @@ class Page_PickList_TransferItem extends Page {
             $m_item_list->set('items_id', $item_id);
             $m_item_list->set('comment', $f->getElement('Comment')->get());
             $m_item_list->set('qty', $orig_qty);
-            $m_item_list->set('from_part_status_id',$f->getElement('part_status_id')->get());
-            $m_item_list->set('to_part_status_id',$f_status_dd->get());
+            $m_item_list->set('from_part_status_id', $f->getElement('part_status_id')->get());
+            $m_item_list->set('to_part_status_id', $f_status_dd->get());
             $m_item_list->saveAndUnload();
 
 //            $m_transfer_log = $this->add('Model_TransferLog');
@@ -185,12 +193,12 @@ class Page_PickList_TransferItem extends Page {
 //            $m_transfer_log->set('system_comment', $orig_qty . ' Item(s) transfered from Store ' . $f->getElement('sel_store')->get() . ' to Transit Store ' . $f->getElement('Destination_Store')->get() . ' - TN :' . $f->getElement('tn_code')->get());
 //            $m_transfer_log->set('items_id', $item_id);
 //            $m_transfer_log->saveAndUnload();
-            $js[] = $f->js()->reload(array('Destination_Store' => $f->getElement('Destination_Store')->get(), 'tn_code' => $f->getElement('tn_code')->get(), 'sel_store' => $f->getElement('sel_store')->get(),'notes'=>$f->getElement('notes')->get()));
+            $js[] = $f->js()->reload(array('Destination_Store' => $f->getElement('Destination_Store')->get(), 'tn_code' => $f->getElement('tn_code')->get(), 'sel_store' => $f->getElement('sel_store')->get(), 'notes' => $f->getElement('notes')->get()));
             $js[] = $item_list->js()->reload(array('tn_code' => $f->getElement('tn_code')->get(), 'sel_store' => $f->getElement('sel_store')->get()));
             $f->js(true, $js)->univ()->successMessage('Item Added')->execute();
         }
         $js = array();
-        $js[] = $pc_info->js()->reload(array('Destination_Store' => $f->getElement('Destination_Store')->get(), 'part_num' => $f->getElement('parts_catalogue_id')->js()->val(), 'serial_fld' => $f->getElement('serial'), 'qty_fld' => $f->getElement('qty'),'store_type'=>$_GET['store_type'],'home_store'=>$_GET['home_store'],'home_store_type'=>$_GET['home_store_type']));
+        $js[] = $pc_info->js()->reload(array('Destination_Store' => $f->getElement('Destination_Store')->get(), 'part_num' => $f->getElement('parts_catalogue_id')->js()->val(), 'serial_fld' => $f->getElement('serial'), 'qty_fld' => $f->getElement('qty'), 'store_type' => $_GET['store_type'], 'home_store' => $_GET['home_store'], 'home_store_type' => $_GET['home_store_type']));
         $this->js('myFunc', $js);
     }
 
