@@ -90,7 +90,9 @@ class Page_PickList_TransferItem extends Page {
         $m_i->addField('serial');
         $item_list->setModel($m_item_list);
         $pc_info = $f->add('View_PartsCatalogueInfo');
-        $f->addField('DropDown','status','status')->setModel('PartStatus');
+        
+        $f_status_dd=$f->addField('DropDown','Destination Status');
+        $m_status=$f_status_dd->setModel('PartStatus',array('id','status'));
         $f->add('Order')->move($pc_info, 'after', 'parts_catalogue')->now();
 
         $item_list->addClass("zebra bordered");
@@ -141,7 +143,7 @@ class Page_PickList_TransferItem extends Page {
             //->js('click', $dd->js(true)->attr('disabled', false));
             $js = array();
             $orig_qty = $f->getElement('qty')->get();
-            $item_id = $f->model->setStore($f->getElement('sel_store')->get(), $f->getElement('parts_catalogue_id')->get(), $f->getElement('serial')->get(), $f->getElement('Destination_Store')->get(), $f->getElement('qty')->get(), $f->getElement('tn_code')->get(), $f->getElement('locators_id')->get(), $f->getElement('locators')->get(),$f->getElement('part_status_id')->get());
+            $item_id = $f->model->setStore($f->getElement('sel_store')->get(), $f->getElement('parts_catalogue_id')->get(), $f->getElement('serial')->get(), $f->getElement('Destination_Store')->get(), $f->getElement('qty')->get(), $f->getElement('tn_code')->get(), $f->getElement('locators_id')->get(), $f->getElement('locators')->get(),$f->getElement('part_status_id')->get(),$f_status_dd->get());
             //$f->update();
 //            $m_transfer_notes->debug();
             $m_transfer_notes->tryLoadBy('tn_code', $f->getElement('tn_code')->get());
@@ -150,6 +152,7 @@ class Page_PickList_TransferItem extends Page {
                 $id = $m_transfer_notes->id;
 //                $m_transfer_notes->set('purchase_order',$f->getElement('purchase_order')->get());
 //                $m_transfer_notes->set('delivery_note',$f->getElement('delivery_note')->get());
+                $m_transfer_notes->set('date_changed', date("Y-m-d H:i:s"));
                 $m_transfer_notes->set('date_changed', date("Y-m-d H:i:s"));
                 $m_transfer_notes->set('notes', $f->getElement('notes')->get());
                 $m_transfer_notes->save();
@@ -170,7 +173,8 @@ class Page_PickList_TransferItem extends Page {
             $m_item_list->set('items_id', $item_id);
             $m_item_list->set('comment', $f->getElement('Comment')->get());
             $m_item_list->set('qty', $orig_qty);
-            $m_item_list->set('part_status_id',$f->getElement('part_status_id')->get());
+            $m_item_list->set('from_part_status_id',$f->getElement('part_status_id')->get());
+            $m_item_list->set('to_part_status_id',$f_status_dd->get());
             $m_item_list->saveAndUnload();
 
 //            $m_transfer_log = $this->add('Model_TransferLog');

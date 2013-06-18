@@ -3,6 +3,7 @@
 class Model_Stores extends Model_Table {
 
     public $entity_code = 'stores';
+    public $title_field = 'store_name';
     public $store_type = null;
     function init() {
         parent::init();

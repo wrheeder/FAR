@@ -53,7 +53,7 @@ class Page_PickList_CollectItem extends Page {
 
         $m_transfer_notes = $this->add('Model_ItemTransferForm');
         $m_items = $f->setModel('ItemsTrf');
-        $f->addField('Text','Comment');
+        $f->addField('Text', 'Comment');
         //$f->getElement('parts_catalogue')->js(true)->focus();
         $f->getElement('stores_id')->js(true)->closest('.atk-form-row-dropdown')->hide();
 
@@ -64,6 +64,9 @@ class Page_PickList_CollectItem extends Page {
         $item_list->setModel($m_item_list);
         $pc_info = $f->add('View_PartsCatalogueInfo');
         $f->add('Order')->move($pc_info, 'after', 'parts_catalogue')->now();
+
+        $f_status_dd = $f->addField('DropDown', 'Destination Status');
+        $m_status = $f_status_dd->setModel('PartStatus', array('id', 'status'));
 
         $item_list->addClass("zebra bordered");
         $item_list->addPaginator(5);
@@ -141,7 +144,7 @@ class Page_PickList_CollectItem extends Page {
             $m_item_list->set('items_id', $item_id);
             $m_item_list->set('comment', $f->getElement('Comment')->get());
             $m_item_list->set('qty', $orig_qty);
-            $m_item_list->set('part_status_id',$f->getElement('part_status_id')->get());
+            $m_item_list->set('part_status_id', $f->getElement('part_status_id')->get());
             $m_item_list->saveAndUnload();
 
 //            $m_transfer_log = $this->add('Model_TransferLog');

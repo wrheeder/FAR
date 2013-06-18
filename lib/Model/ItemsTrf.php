@@ -13,21 +13,29 @@ class Model_ItemsTrf extends Model_Items {
         parent::init();
     }
 
-    function setStore($store, $pc, $serial, $to_store, $qty, $tn_code, $locator,$locator_name,$from_status,$to_status) {
+    function setStore($store, $pc, $serial, $to_store, $qty, $tn_code, $locator, $locator_name, $from_status, $to_status) {
         $this->new_store = $to_store;
         $this->current_store = $store;
         $this->locator = $locator;
         ////get some more store info
-        $m_stores=$this->add('Model_Stores');
+        $m_stores = $this->add('Model_Stores');
         $m_stores->load($store);
         $store_name = $m_stores->get('store_name');
         $m_stores->load($to_store);
         $to_store_name = $m_stores->get('store_name');
+        ////get some more status info
+        $m_status = $this->add('Model_PartStatus');
+        $m_status->load($from_status);
+        $from_status_name=$m_status->get('status');
+        $m_status->load($to_status);
+        $to_status_name=$m_status->get('status');
+        
         ////////////////////////////////
+        //
         //die($status);
         /// Load Partscat in from store
         $this->addCondition('stores_id', $store);
-        $this->addCondition('part_status_id',$status);
+        $this->addCondition('part_status_id', $from_status);
         $this->loadBy('parts_catalogue_id', $pc);
         /// Get ref to PartsCat that is loaded
         $parts_cat = $this->ref('parts_catalogue_id');
@@ -35,20 +43,20 @@ class Model_ItemsTrf extends Model_Items {
 
         $m_transfer_log = $this->add('Model_TransferLog');
         if ($parts_cat->get('serialized')) {
-            $m_items=$this->add('Model_Items'); 
+            $m_items = $this->add('Model_Items');
             $m_items->addCondition('stores_id', $store);
             $m_items->addCondition('serial', $serial);
             $m_items->LoadBy('parts_catalogue_id', $pc);
             $m_items->set('stores_id', $to_store);
             $m_items->set('locators_id', $locator);
-            $m_items->set('part_status_id', $status);
+            $m_items->set('part_status_id', $to_status);
             $id = $m_items->id;
             $m_items->saveAndUnload();
             $m_transfer_log->set('user_id', $this->api->auth->model->id);
             $m_transfer_log->set('from_stores_id', $store);
             $m_transfer_log->set('to_stores_id', $to_store);
             $m_transfer_log->set('time', date("Y-m-d H:i:s"));
-            $m_transfer_log->set('system_comment', $qty . ' Item(s) transfered from [' . $store_name . '] to [' . $to_store_name . '] - TN :' . $tn_code . ' Locator :[' . $locator_name.']'.'- Status ->'.$status);
+            $m_transfer_log->set('system_comment', $qty . ' Item(s) transfered from [' . $store_name . '] to [' . $to_store_name . '] - TN :' . $tn_code . ' Locator :[' . $locator_name . ']' . '- From Status ->' . $from_status_name . ' Dest Status ->' . $to_status_name);
             $m_transfer_log->set('items_id', $id);
             $m_transfer_log->saveAndUnload();
         } else {
@@ -63,15 +71,15 @@ class Model_ItemsTrf extends Model_Items {
             $m_transfer_log->set('from_stores_id', $store);
             $m_transfer_log->set('to_stores_id', $to_store);
             $m_transfer_log->set('time', date("Y-m-d H:i:s"));
-            $m_transfer_log->set('system_comment', $qty . ' Item(s) transfered from [' . $store_name . '] to [' . $to_store_name . '] - TN :' . $tn_code . ' Locator :[' . $locator_name.']'.' - Status ->'.$status);
+            $m_transfer_log->set('system_comment', $qty . ' Item(s) transfered from [' . $store_name . '] to [' . $to_store_name . '] - TN :' . $tn_code . ' Locator :[' . $locator_name . ']' . '- From Status ->' . $from_status_name . ' Dest Status ->' . $to_status_name);
             $m_transfer_log->set('items_id', $id);
             $m_transfer_log->saveAndUnload();
             //Add Moved QTY to Dest Store, first check if exists
             $this->unload();
-            $m_items=$this->add('Model_Items');
-            
+            $m_items = $this->add('Model_Items');
+
             $m_items->addCondition('stores_id', $to_store);
-            $m_items->addCondition('part_status_id',$status);
+            $m_items->addCondition('part_status_id', $to_status);
             $this->tryLoadBy('parts_catalogue_id', $pc);
             $m_items->tryLoadBy('parts_catalogue_id', $pc);
             if ($m_items->loaded()) {
@@ -84,24 +92,24 @@ class Model_ItemsTrf extends Model_Items {
                 $m_transfer_log->set('from_stores_id', $store);
                 $m_transfer_log->set('to_stores_id', $to_store);
                 $m_transfer_log->set('time', date("Y-m-d H:i:s"));
-                $m_transfer_log->set('system_comment', $qty . ' Item(s) transfered from [' . $store_name . '] to [' . $to_store_name . '] - TN :' . $tn_code . ' Locator :[' . $locator_name.']'.'- Status ->'.$status);
+                $m_transfer_log->set('system_comment', $qty . ' Item(s) transfered from [' . $store_name . '] to [' . $to_store_name . '] - TN :' . $tn_code . ' Locator :[' . $locator_name . ']' . '- From Status ->' . $from_status_name . ' Dest Status ->' . $to_status_name);
                 $m_transfer_log->set('items_id', $to_id);
                 $m_transfer_log->saveAndUnload();
             } else {
                 //this item does not exist in destination store yet - will be created
                 $m_items->set('parts_catalogue_id', $pc);
                 $m_items->set('stores_id', $to_store);
-                $m_items->set('part_status_id', $status); ////to modify function later to accomodate part status to be sent.(now default new)
+                $m_items->set('part_status_id', $to_status); ////to modify function later to accomodate part status to be sent.(now default new)
                 $m_items->set('locators_id', $locator);  //here the locator id should be copied
                 $m_items->set('qty', $qty);
-                
+
                 $m_items->save();
                 $to_id = $m_items->id;
                 $m_transfer_log->set('user_id', $this->api->auth->model->id);
                 $m_transfer_log->set('from_stores_id', $store);
                 $m_transfer_log->set('to_stores_id', $to_store);
                 $m_transfer_log->set('time', date("Y-m-d H:i:s"));
-                $m_transfer_log->set('system_comment', $qty . ' Item(s) transfered from [' . $store_name . '] to [' . $to_store_name . '] - TN :' . $tn_code . ' Locator :[' . $locator_name.']'.'- Status ->'.$status);
+                $m_transfer_log->set('system_comment', $qty . ' Item(s) transfered from [' . $store_name . '] to [' . $to_store_name . '] - TN :' . $tn_code . ' Locator :[' . $locator_name . ']' . '- From Status ->' . $from_status_name . ' Dest Status ->' . $to_status_name);
                 $m_transfer_log->set('items_id', $to_id);
                 $m_transfer_log->saveAndUnload();
             }
