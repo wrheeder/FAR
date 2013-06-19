@@ -88,6 +88,7 @@ class page_admin extends Page_ApplicationPage {
             $store_types->grid->addPaginator(15);
         }
         if($parts_catalogue->grid){
+            $parts_catalogue->grid->addQuickSearch(array('part_number', 'description','primary_category' ,'secondary_category','tertiary_category','supplier','alternative_part_number'));
             $parts_catalogue->grid->getColumn('part_number')->makeSortable();
             $parts_catalogue->grid->dq->order('part_number asc');
             $parts_catalogue->grid->addClass("zebra bordered");
