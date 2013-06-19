@@ -79,7 +79,9 @@ class Page_PickList_TransferItem extends Page {
         $dd->setValueList($out);
         if ($_GET['Destination_Store'])
             $dd->set($_GET['Destination_Store']);
-        //if ($_GET['Destination_Store'])
+        
+        
+//if ($_GET['Destination_Store'])
         //$dd->js(true)->attr('disabled', true);
 //        $f->addField('Line', 'purchase_order')->set($_GET['purchase_order']);
 //        $f->addField('Line', 'delivery_note')->set($_GET['delivery_note']);
@@ -89,7 +91,7 @@ class Page_PickList_TransferItem extends Page {
         $f->addField('Text', 'Comment');
         //$f->getElement('parts_catalogue')->js(true)->focus();
         $f->getElement('stores_id')->js(true)->closest('.atk-form-row-dropdown')->hide();
-        $f->getElement('locators')->js(true)->closest('.atk-form-row-line');
+//        $f->getElement('locators')->js(true)->closest('.atk-form-row-line');
         $item_list = $this->add('Grid');
         $m_item_list = $this->add('Model_ItemTrfList');
         $tn_code_id = $m_transfer_notes->getTransferFormId($f->getElement('tn_code')->get());
@@ -108,7 +110,7 @@ class Page_PickList_TransferItem extends Page {
 
 
         $this->add('Button')->set('Save&Close Transfer Form')->js('click', $this->js()->trigger('reloadpage'))->univ()->closeDialog();
-
+        $dd->js('change',$f->js()->reload(array($this->api->url(),'Destination_Store'=>$dd->js()->val())));
         ///Validation
         $locator = $f->getElement('locators');
         $locator->validateNotNull();
