@@ -8,6 +8,7 @@ class Page_PickList_CollectItem extends Page {
         $this->api->stickyGet('sel_store');
         $this->api->stickyGet('tn_code');
         $this->api->stickyGet('Destination_Store');
+         $this->api->stickyGet('home_store');
         $f = $this->add('Form');
         $f->addField('Hidden', 'sel_store')->set($_GET['sel_store']);
         $f->addField('ReadOnlySave', 'tn_code')->set($_GET['tn_code']);

@@ -7,7 +7,7 @@ class Page_PickList_Collect extends Page {
         $f = $this->add('Form');
         $this->api->stickyGet('sel_store');
         $this->api->stickyGet('store_type');
-        $f->add('Button')->set('Add Collection Form')->js('click')->univ()->frameURL('Collection Form', $this->api->getDestinationURL('PickList_CollectItem',array('store_type'=>$_GET['store_type'],'home_store'=>$_GET['home_store'],'home_store_type'=>$_GET['home_store_type'])));
+        $f->add('Button')->set('Add Collection Form')->js('click')->univ()->frameURL('Collection Form', $this->api->getDestinationURL('PickList_CollectItem',array('store_type'=>$_GET['store_type'],'home_store'=>$_GET['home_store'],'home_store_type'=>$_GET['home_store_type'],'Destination_Store' =>$_GET['home_store'])));
         $grid = $this->add('Grid');
 
         $m_itembooking_form = $grid->setModel('ItemCollectionForm')->addCondition('from_stores_id', $_GET['sel_store']);
