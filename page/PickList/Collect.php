@@ -13,7 +13,7 @@ class Page_PickList_Collect extends Page {
         $m_itembooking_form = $grid->setModel('ItemCollectionForm')->addCondition('from_stores_id', $_GET['sel_store']);
         $grid->addColumn('button', 'edit', 'Edit Collection');
         $pg = $this->api->getDestinationURL('print_PrintTransferForm', array('cut_page'=>1));
-        $grid->addColumn('template','print')->setTemplate('<a href="'.$pg.'&tn_code=<?$id?>" target="_blank">Print Booking Form</a>');
+        $grid->addColumn('template','print')->setTemplate('<a href="'.$pg.'&tn_code=<?$id?>" target="_blank">Print Collection Form</a>');
         $this->js("reloadpage", $this->js()->reload())->_selector("body");
         $grid->addQuickSearch(array('tn_code'));
 //        $grid->getColumn('booking')->makeSortable();
