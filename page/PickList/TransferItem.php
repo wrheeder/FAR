@@ -75,7 +75,7 @@ class Page_PickList_TransferItem extends Page {
 
         $dd = $f->addField('Dropdown', 'Destination Store');
 
-
+        $_GET['Destination_Store']=$dd->get();
         $dd->setValueList($out);
         if ($_GET['Destination_Store'])
             $dd->set($_GET['Destination_Store']);
