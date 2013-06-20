@@ -41,13 +41,13 @@ class Page_PickList_TransferItem extends Page {
         ////
 
         $out = array();
-        if ($_GET['Destination_Store']) {
+        if ($_GET['Destination_Store'] && !$_GET['dd_change']) {
            foreach ($dest_stores as $dest_store) {
                 if ($dest_store['id'] == $_GET['Destination_Store']) {
                     $out[$dest_store['id']] = $dest_store['store_name'];
                 }
             } 
-        } else {
+        } else{
             foreach ($dest_stores as $dest_store) {
                 if ($dest_store['parent_store_id'] != $_GET['sel_store']) {
                     $out[$dest_store['id']] = $dest_store['store_name'];
@@ -74,8 +74,6 @@ class Page_PickList_TransferItem extends Page {
         //
 
         $dd = $f->addField('Dropdown', 'Destination Store');
-
-        $_GET['Destination_Store']=$dd->get();
         $dd->setValueList($out);
         if ($_GET['Destination_Store'])
             $dd->set($_GET['Destination_Store']);
@@ -110,7 +108,7 @@ class Page_PickList_TransferItem extends Page {
 
 
         $this->add('Button')->set('Save&Close Transfer Form')->js('click', $this->js()->trigger('reloadpage'))->univ()->closeDialog();
-        $dd->js('change',$f->js()->reload(array($this->api->url(),'Destination_Store'=>$dd->js()->val())));
+        $dd->js('change',$f->js()->reload(array($this->api->url(),'Destination_Store'=>$dd->js()->val(),'dd_change'=>true)));
         ///Validation
         $locator = $f->getElement('locators');
         $locator->validateNotNull();
