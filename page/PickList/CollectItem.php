@@ -145,7 +145,8 @@ class Page_PickList_CollectItem extends Page {
             $m_item_list->set('items_id', $item_id);
             $m_item_list->set('comment', $f->getElement('Comment')->get());
             $m_item_list->set('qty', $orig_qty);
-            $m_item_list->set('part_status_id', $f->getElement('part_status_id')->get());
+            $m_item_list->set('from_part_status_id', $f->getElement('part_status_id')->get());
+            $m_item_list->set('to_part_status_id', $f_status_dd->get());
             $m_item_list->saveAndUnload();
 
 //            $m_transfer_log = $this->add('Model_TransferLog');
