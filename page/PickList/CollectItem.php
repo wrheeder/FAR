@@ -117,7 +117,7 @@ class Page_PickList_CollectItem extends Page {
         if ($f->isSubmitted()) {
             $js = array();
             $orig_qty = $f->getElement('qty')->get();
-            $item_id = $f->model->setStore($f->getElement('sel_store')->get(), $f->getElement('parts_catalogue_id')->get(), $f->getElement('serial')->get(), $f->getElement('Destination_Store')->get(), $f->getElement('qty')->get(), $f->getElement('tn_code')->get(), $f->getElement('locators_id')->get(), $f->getElement('locators')->get(), $f->getElement('part_status_id')->get());
+            $item_id = $f->model->setStore($f->getElement('sel_store')->get(), $f->getElement('parts_catalogue_id')->get(), $f->getElement('serial')->get(), $f->getElement('Destination_Store')->get(), $f->getElement('qty')->get(), $f->getElement('tn_code')->get(), $f->getElement('locators_id')->get(), $f->getElement('locators')->get(), $f->getElement('part_status_id')->get(),$f_status_dd->get());
             //$f->update();
             $m_transfer_notes->tryLoadBy('tn_code', $f->getElement('tn_code')->get());
             $id = null;
