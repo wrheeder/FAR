@@ -37,7 +37,7 @@ class page_print_PrintBookingForm extends Page{
         $lister->template->set('date_changed',$m_b_f->get('date_changed'));
         $lister->template->set('notes',$m_b_f->get('notes'));
         $lister->template->set('user',$m_b_f->get('user'));
-        
+        $this->add('Html')->set('<script>window.print();</script>');
     }
 //    public function defaultTemplate() {
 //        return array('BookingInForm');

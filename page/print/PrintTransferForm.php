@@ -28,6 +28,7 @@ class page_print_PrintTransferForm extends Page{
         $lister->setModel($m_t_l);
 //        $lister->template->set('purchase_order',$_GET['purchase_order']);
         $lister->template->set('tn_code',$m_t_f->get('tn_code'));
+        $lister->template->set('operation',$_GET['operation']);
         $lister->template->set('date_created',$m_t_f->get('date_created'));
 //        $lister->template->set('purchase_order',$m_t_f->get('purchase_order'));
 //        $lister->template->set('delivery_note',$m_t_f->get('delivery_note'));
@@ -36,7 +37,7 @@ class page_print_PrintTransferForm extends Page{
         $lister->template->set('date_changed',$m_t_f->get('date_changed'));
         $lister->template->set('notes',$m_t_f->get('notes'));
         $lister->template->set('user',$m_t_f->get('user'));
-        
+        $this->add('Html')->set('<script>window.print();</script>');
     }
 //    public function defaultTemplate() {
 //        return array('BookingInForm');
