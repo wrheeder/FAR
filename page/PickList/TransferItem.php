@@ -89,6 +89,7 @@ class Page_PickList_TransferItem extends Page {
         $f->addField('Text', 'Comment');
         //$f->getElement('parts_catalogue')->js(true)->focus();
         $f->getElement('stores_id')->js(true)->closest('.atk-form-row-dropdown')->hide();
+        $f->getElement('warrantee')->js(true)->closest('.atk-form-row')->hide();
 //        $f->getElement('locators')->js(true)->closest('.atk-form-row-line');
         $item_list = $this->add('Grid');
         $m_item_list = $this->add('Model_ItemTrfList');

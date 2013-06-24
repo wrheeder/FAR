@@ -9,6 +9,7 @@ class Model_Items extends Model_Table {
         $pc = $this->hasOne('PartsCatalogue', null, 'part_number')->mandatory(true)->display(array('form' => 'autocomplete/Basic')); //bring autocomplete in here
         $pc->ref('desciption');
         $this->addField('serial');
+        $this->addField('warrantee');
         $this->addField('qty')->type('number')->defaultValue(1);
         if ($_GET['sel_store']) {
             $this->hasOne('Stores', null, 'store_name')->mandatory(true)->defaultValue($_GET['sel_store']);
@@ -31,6 +32,7 @@ class Model_Items extends Model_Table {
         $store_id = $model->get('stores_id');
         $locator_id = $model->get('locators_id');
         $serial = $model->get('serial');
+        $warrantee = $model->get('warrantee');
         //$this->unload();
         if ($pc->loaded()) {
             if (!$pc->get('serialized')) {
@@ -45,7 +47,7 @@ class Model_Items extends Model_Table {
                         $this->set('qty', $this->get('qty') + $qty_to_add);
                     }
                 } else {
-                    
+                    $this->set('warrantee',$warrantee);
                     $this->set('parts_catalogue_id', $pc->id);
                     $this->set('stores_id', $store_id);
                     $this->set('part_status_id', $status); 
