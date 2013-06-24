@@ -57,7 +57,8 @@ class Page_PickList_CollectItem extends Page {
         $f->addField('Text', 'Comment');
         //$f->getElement('parts_catalogue')->js(true)->focus();
         $f->getElement('stores_id')->js(true)->closest('.atk-form-row-dropdown')->hide();
-
+        $f->getElement('warrantee')->js(true)->closest('.atk-form-row')->hide();
+        
         $item_list = $this->add('Grid');
         $m_item_list = $this->add('Model_ItemTrfList');
         $tn_code_id = $m_transfer_notes->getTransferFormId($f->getElement('tn_code')->get());
