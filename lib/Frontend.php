@@ -40,7 +40,7 @@ $auth = $this->add('ApplicationAuth');
         if ($auth->isLoggedIn()) {
 
             $l->setSource(array(
-                array('ids' => 0, 'page' => 'index', 'name' => 'Home', 'parent_id' => null),
+                array('ids' => 0, 'page' => 'index', 'name' => 'Warehouse Viewer', 'parent_id' => null),
                 array('ids' => 2, 'page' => 'logout', 'name' => 'Logout', 'parent_id' => null)
             ));
         }
