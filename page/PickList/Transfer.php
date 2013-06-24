@@ -14,7 +14,7 @@ class Page_PickList_Transfer extends Page {
 
         $m_itembooking_form = $grid->setModel('ItemTransferForm')->addCondition('from_stores_id', $_GET['sel_store']);
         $grid->addColumn('button', 'edit', 'Edit Transfer');
-        $pg = $this->api->getDestinationURL('print_PrintTransferForm', array('cut_page'=>1));
+        $pg = $this->api->getDestinationURL('print_PrintTransferForm', array('cut_page'=>1,'operation'=>'TRANSFERRED'));
         $grid->addColumn('template','print')->setTemplate('<a href="'.$pg.'&tn_code=<?$id?>" target="_blank">Print Transfer Form</a>');
         $this->js("reloadpage", $this->js()->reload())->_selector("body");
         $grid->addQuickSearch(array('tn_code'));
@@ -30,7 +30,7 @@ class Page_PickList_Transfer extends Page {
             die(var_dump($_GET));
             $m_itembooking_form->tryLoad($_GET['Print']);
             
-            $f->js()->univ()->frameURL('Transfer Form', $this->api->getDestinationURL('print_PrintTransgerForm', array('cut_page'=>1,'tn_code' => $m_itembooking_form->id,'Destination_Store' => $m_itembooking_form->get('to_stores_id'),'store_type'=>$_GET['store_type'],'home_store'=>$_GET['home_store'],'home_store_type'=>$_GET['home_store_type'],'notes'=>$m_itembooking_form->get('notes'))))->execute();
+            $f->js()->univ()->frameURL('Transfer Form', $this->api->getDestinationURL('print_PrintTransgerForm', array('cut_page'=>1,'tn_code' => $m_itembooking_form->id,'Destination_Store' => $m_itembooking_form->get('to_stores_id'),'store_type'=>$_GET['store_type'],'home_store'=>$_GET['home_store'],'home_store_type'=>$_GET['home_store_type'],'notes'=>$m_itembooking_form->get('notes'),'operation'=>'transfer')))->execute();
         }
     }
 
