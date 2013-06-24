@@ -49,9 +49,9 @@ class Page_PickList_TransferItem extends Page {
             } 
         } else{
             foreach ($dest_stores as $dest_store) {
-                if ($dest_store['parent_store_id'] != $_GET['sel_store']) {
+               // if ($dest_store['parent_store_id'] != $_GET['sel_store']) {
                     $out[$dest_store['id']] = $dest_store['store_name'];
-                }
+               // }
             }
         }
         //loading sites
