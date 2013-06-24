@@ -39,7 +39,7 @@ class Model_Items extends Model_Table {
                 $this->tryLoadBy('parts_catalogue_id', $pc->id);
                 if ($this->loaded()) {
                     $this->set('locators_id', $locator_id);
-                    if ($this->get('qty') == 1 || $this->get('qty') == 0) {
+                    if ( $this->get('qty') == 0) { //removed this here because it could cause issues --- test  ;$this->get('qty') == 1 ||
                         $this->set('qty', $qty_to_add);
                     } else {
                         $this->set('qty', $this->get('qty') + $qty_to_add);
