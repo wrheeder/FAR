@@ -29,7 +29,7 @@ class Model_ItemsTrf extends Model_Items {
         $from_status_name=$m_status->get('status');
         $m_status->load($to_status);
         $to_status_name=$m_status->get('status');
-        
+        $warrantee = null;
         ////////////////////////////////
         //
         //die($status);
@@ -37,6 +37,7 @@ class Model_ItemsTrf extends Model_Items {
         $this->addCondition('stores_id', $store);
         $this->addCondition('part_status_id', $from_status);
         $this->loadBy('parts_catalogue_id', $pc);
+        $warrantee=$this->get('warrantee');
         /// Get ref to PartsCat that is loaded
         $parts_cat = $this->ref('parts_catalogue_id');
         $id = $this->id;
@@ -98,6 +99,7 @@ class Model_ItemsTrf extends Model_Items {
             } else {
                 //this item does not exist in destination store yet - will be created
                 $m_items->set('parts_catalogue_id', $pc);
+                $m_items->set('warrantee', $warrantee);
                 $m_items->set('stores_id', $to_store);
                 $m_items->set('part_status_id', $to_status); ////to modify function later to accomodate part status to be sent.(now default new)
                 $m_items->set('locators_id', $locator);  //here the locator id should be copied
