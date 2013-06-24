@@ -10,6 +10,7 @@ class Model_Items extends Model_Table {
         $pc->ref('desciption');
         $this->addField('serial');
         $this->addField('warrantee');
+        $this->addField('version_fw');
         $this->addField('qty')->type('number')->defaultValue(1);
         if ($_GET['sel_store']) {
             $this->hasOne('Stores', null, 'store_name')->mandatory(true)->defaultValue($_GET['sel_store']);
@@ -33,6 +34,7 @@ class Model_Items extends Model_Table {
         $locator_id = $model->get('locators_id');
         $serial = $model->get('serial');
         $warrantee = $model->get('warrantee');
+        $version_fw = $model->get('version_fw');
         //$this->unload();
         if ($pc->loaded()) {
             if (!$pc->get('serialized')) {
@@ -48,6 +50,7 @@ class Model_Items extends Model_Table {
                     }
                 } else {
                     $this->set('warrantee',$warrantee);
+                    $this->set('version_fw',$version_fw);
                     $this->set('parts_catalogue_id', $pc->id);
                     $this->set('stores_id', $store_id);
                     $this->set('part_status_id', $status); 
