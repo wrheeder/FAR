@@ -25,7 +25,7 @@ class page_admin extends Page_ApplicationPage {
         $supplier = $tabs->addTab('Supplier')->add("CRUD");
         $m_supplier = $supplier->setModel('supplier');
         $m_uom = $unit_of_measure->setModel('UnitOfMeasure');
-        $m_usr = $user->setModel('User', array('username', 'email', 'isAdmin'));
+        $m_usr = $user->setModel('User', array('username', 'email', 'isAdmin','store_search'));
         $m_str = $stores->setModel('Stores');
         $m_strtype = $store_types->setModel('StoreType');
         $this->api->stickyGet('id');

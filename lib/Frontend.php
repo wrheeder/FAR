@@ -10,7 +10,7 @@ class Frontend extends ApiFrontend {
         // Keep this if you are going to use database on all pages
         $this->dbConnect();
         $this->requires('atk', '4.2.5');
-        
+
         //$auth->allowPage(array('index'));
         // This will add some resources from atk4-addons, which would be located
         // in atk4-addons subdirectory.
@@ -30,34 +30,33 @@ class Frontend extends ApiFrontend {
                 ->_load('ui.atk4_notify')
         ;
 
-$auth = $this->add('ApplicationAuth');
+        $auth = $this->add('ApplicationAuth');
         $l = $this->add('menu/Menu_Dropdown', null, 'Menu'); // DON'T USE FIELD NAMED "ID", because it's already built-in Model class as auto-incremental
         $layout = $this->api->add('Layout/Layout');
         if ($this->page == "index") {
             $layout->show("west");
             $layout->toggle("west");
         }
+        $menu = array();
+        
         if ($auth->isLoggedIn()) {
-
-            $l->setSource(array(
-                array('ids' => 0, 'page' => 'index', 'name' => 'Warehouse Viewer', 'parent_id' => null),
-                array('ids' => 2, 'page' => 'logout', 'name' => 'Logout', 'parent_id' => null)
-            ));
-        }
-        else
-        {
+            $menu[]=array('ids' => 0, 'page' => 'index', 'name' => 'Warehouse Viewer', 'parent_id' => null);
+            
+            if ($auth->hasStoreSearch()) {
+              $menu[]=array('ids' => 2, 'page' => 'search', 'name' => 'Store Search', 'parent_id' => null);  
+            } 
+            if($auth->isAdmin()){
+                $menu[]=array('ids' => 3, 'page' => 'admin', 'name' => 'Admin', 'parent_id' => null);
+            }
+            $menu[]=array('ids' =>4, 'page' => 'logout', 'name' => 'Logout', 'parent_id' => null);
+        } else {
             $layout->hide("west");
         }
         $l->setRelationFields('ids', 'parent_id');
         //$this->add('themeswitcher\Test','themeswitcher_test');
 
-        if ($auth->isLoggedIn() && $this->api->auth->isAdmin()) {
-            $l->setSource(array(
-                array('ids' => 0, 'page' => 'index', 'name' => 'Warehouse Viewer', 'parent_id' => null),
-                array('ids' => 2, 'page' => 'admin', 'name' => 'Admin', 'parent_id' => null),
-                array('ids' => 3, 'page' => 'logout', 'name' => 'Logout', 'parent_id' => null)
-            ));
-        }
+        
+        $l->setSource($menu);
     }
 
     function initLayout() {
