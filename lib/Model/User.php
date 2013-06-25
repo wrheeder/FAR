@@ -10,6 +10,7 @@ class Model_User extends Model_Table {
         $this->addField('email')->mandatory('Email required');
         $this->addField('password')->display(array('form' => 'password'))->mandatory('Type your password');
         $this->addField('isAdmin')->type('boolean');
+        $this->addField('store_search')->type('boolean');
         $this->hasMany('UserStores','user_id');
     }
     
