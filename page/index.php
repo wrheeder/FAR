@@ -78,10 +78,12 @@ class page_index extends Page_ApplicationPage {
             } else {
                 $tabs->js(true)->show();
             }
-
-            if ($_GET['sel_store'] == $this->home_store) {
+            //$this->echo('$this->home_store_type');
+            if ($_GET['sel_store'] == $this->home_store ) {
                 $pick_list_tab = $tabs->addTabURL($this->api->url('PickList_Transfer',array('sel_store'=>$_GET['sel_store'],'store_type'=>$m_stores->get('store_type'),'home_store'=>$this->home_store,'home_store_type'=>$this->home_store_type)), 'Transfer Equipment/Items');
-                $add_item_tab = $tabs->addTabURL($this->api->url('BookInEquipmentItems',array('sel_store'=>$_GET['sel_store'],'store_type'=>$m_stores->get('store_type'),'home_store'=>$this->home_store,'home_store_type'=>$this->home_store_type)), 'Book In Equipment/Items');
+                if($this->home_store_type!='Regional Stock Van' && $this->home_store_type!='National Stock Van'){
+                    $add_item_tab = $tabs->addTabURL($this->api->url('BookInEquipmentItems',array('sel_store'=>$_GET['sel_store'],'store_type'=>$m_stores->get('store_type'),'home_store'=>$this->home_store,'home_store_type'=>$this->home_store_type)), 'Book In Equipment/Items');
+                }
             } elseif ($_GET['sel_store'] == $this->transit_store) {
                 $pick_list_tab = $tabs->addTabURL($this->api->url('PickList_Collect',array('sel_store'=>$_GET['sel_store'],'store_type'=>$m_stores->get('store_type'),'home_store'=>$this->home_store,'home_store_type'=>$this->home_store_type)), 'Collection PickList');
             } elseif($cur_store['store_type']=='Site'){
