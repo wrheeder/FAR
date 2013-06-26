@@ -30,7 +30,7 @@ class page_admin extends Page_ApplicationPage {
         $m_strtype = $store_types->setModel('StoreType');
         $this->api->stickyGet('id');
         if ($user->grid) {
-            $user->grid->addQuickSearch(array('Username', 'email', 'subco'));
+            $user->grid->addQuickSearch(array('Username', 'email'));
             $user->grid->getColumn('username')->makeSortable();
             $user->grid->dq->order('username asc');
             $user->grid->addClass("zebra bordered");
