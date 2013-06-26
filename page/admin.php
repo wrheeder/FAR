@@ -4,6 +4,7 @@ class page_admin extends Page_ApplicationPage {
 
     function init() {
         parent::init();
+        if($this->api->auth->isAdmin()){
         $tabs = $this->add('Tabs');
         $stores = $tabs->addTab('Stores')->add("CRUD");
         $store_types = $tabs->addTab('Store Types')->add("CRUD");
@@ -141,7 +142,8 @@ class page_admin extends Page_ApplicationPage {
             $movement->addClass("zebra bordered");
             $movement->addPaginator(25);
         }
-        
+        }else
+            $this->api->redirect('index');
     }
 
 }
