@@ -22,7 +22,7 @@ class Page_search extends Page{
         $store_type=$store->join('store_type');
         $store_type->addField('type')->type('text');
         $g->setModel($m);
-        $g->addQuickSearch(array('serial','description','alternative_part_number','stores','locators','part_status','type'));
+        $g->addQuickSearch(array('parts_catalogue','serial','description','alternative_part_number','stores','locators','part_status','type'));
         $g->addPaginator(15);
     }
 }
