@@ -1,5 +1,5 @@
 <?php
-class Page_search extends Page{
+class Page_search extends Page_ApplicationPage{
     function init() {
         parent::init();
         $this->add('View_Info')->set('Type in Search field to search Serial/Description/Alt PN/Stores/Locators/Part Status and Types');
