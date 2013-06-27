@@ -34,6 +34,13 @@ class ApplicationAuth extends BasicAuth {
             return false;
     }
 
+    function hasPartsCatalogueBrowser() {
+        if ($this->get('pc_search'))
+            return true;
+        else
+            return false;
+    }
+
     function hasStoreSearch() {
         if ($this->get('store_search'))
             return true;

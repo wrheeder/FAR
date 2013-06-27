@@ -38,24 +38,27 @@ class Frontend extends ApiFrontend {
             $layout->toggle("west");
         }
         $menu = array();
-        
+
         if ($auth->isLoggedIn()) {
-            $menu[]=array('ids' => 0, 'page' => 'index', 'name' => 'Warehouse Viewer', 'parent_id' => null);
-            
+            $menu[] = array('ids' => 0, 'page' => 'index', 'name' => 'Warehouse Viewer', 'parent_id' => null);
+
             if ($auth->hasStoreSearch()) {
-              $menu[]=array('ids' => 2, 'page' => 'search', 'name' => 'Store Search', 'parent_id' => null);  
-            } 
-            if($auth->isAdmin()){
-                $menu[]=array('ids' => 3, 'page' => 'admin', 'name' => 'Admin', 'parent_id' => null);
+                $menu[] = array('ids' => 2, 'page' => 'search', 'name' => 'Store Search', 'parent_id' => null);
             }
-            $menu[]=array('ids' =>4, 'page' => 'logout', 'name' => 'Logout', 'parent_id' => null);
+            if ($auth->hasPartsCatalogueBrowser()) {
+                $menu[] = array('ids' => 4, 'page' => 'partscatalogue', 'name' => 'PC Browser', 'parent_id' => null);
+            }
+            if ($auth->isAdmin()) {
+                $menu[] = array('ids' => 3, 'page' => 'admin', 'name' => 'Admin', 'parent_id' => null);
+            }
+            $menu[] = array('ids' => 5, 'page' => 'logout', 'name' => 'Logout', 'parent_id' => null);
         } else {
             $layout->hide("west");
         }
         $l->setRelationFields('ids', 'parent_id');
         //$this->add('themeswitcher\Test','themeswitcher_test');
 
-        
+
         $l->setSource($menu);
     }
 

@@ -50,28 +50,31 @@ class page_admin extends Page_ApplicationPage {
 
                 $user->grid->addColumn('expander', 'UserStore');
             }
-            if ($user->form) {
-                //$user->form->addField('password','password');
-                if ($user->form->isSubmitted()) {
-                    $m = $user->form->getModel();
-                    if ($m['password'] == null || $m['password'] == '')
-                        $m->set('password', $this->api->auth->encryptPassword('tempPW1234'));
-                    $m->save();
-                }
+            
+            $user->grid->addColumn('expander','UserStore');
+        }
+        if ($user->form) {
+            //$user->form->addField('password','password');
+            if ($user->form->isSubmitted()) {
+                $m = $user->form->getModel();
+                if ($m['password'] == null || $m['password'] == '')
+                    $m->set('password', $this->api->auth->encryptPassword('tempPW1234'));
+                $m->save();
             }
-            if ($stores->grid) {
+        }
+        if ($stores->grid) {
+            
+           $stores->grid->addQuickSearch(array('store_name','store_type'));
+            $stores->grid->getColumn('store_name')->makeSortable();
+            $stores->grid->getColumn('store_type')->makeSortable();
+            $stores->grid->dq->order('store_name asc');
+            $stores->grid->addClass("zebra bordered");
+            $stores->grid->addPaginator(15);
 
-                $stores->grid->addQuickSearch(array('store_name', 'store_type'));
-                $stores->grid->getColumn('store_name')->makeSortable();
-                $stores->grid->getColumn('store_type')->makeSortable();
-                $stores->grid->dq->order('store_name asc');
-                $stores->grid->addClass("zebra bordered");
-                $stores->grid->addPaginator(15);
-
-                $stores->grid->addColumn('expander', 'AddLocator');
-                if ($stores->model['store_type']) {
-                    
-                }
+            $stores->grid->addColumn('expander', 'AddLocator');
+            if($stores->model['store_type']){
+                
+            }
 //            if ($_GET['Add_Locator']) {
 //                $this->api->stickyGet('id');
 //                $stores->grid->js()->univ()->dialogURL('Add Locator', $this->api->getDestinationURL(
