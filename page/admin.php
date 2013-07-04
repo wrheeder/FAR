@@ -29,6 +29,10 @@ class page_admin extends Page_ApplicationPage {
             $m_usr = $user->setModel('User', array('username', 'email', 'isAdmin', 'store_search','pc_search'));
             $m_str = $stores->setModel('Stores');
             $m_strtype = $store_types->setModel('StoreType');
+            
+            $login_history = $tabs->addTab('Login History')->add("Grid");
+            $m_login_history = $login_history->setModel('LoginHistory');
+            
             $this->api->stickyGet('id');
             if ($user->grid) {
                 $user->grid->addQuickSearch(array('Username', 'email'));
@@ -142,6 +146,13 @@ class page_admin extends Page_ApplicationPage {
                 $movement->dq->order('items asc');
                 $movement->addClass("zebra bordered");
                 $movement->addPaginator(25);
+            }
+            if ($login_history) {
+                $login_history->addQuickSearch(array('user', 'date', 'ip'));
+                $login_history->getColumn('user')->makeSortable();
+                $login_history->dq->order('user asc');
+                $login_history->addClass("zebra bordered");
+                $login_history->addPaginator(25);
             }
         }
         else
