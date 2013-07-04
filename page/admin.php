@@ -24,6 +24,10 @@ class page_admin extends Page_ApplicationPage {
         $m_ter_cat = $tertiary_cat->setModel('TertiaryCategory');
         $supplier = $tabs->addTab('Supplier')->add("CRUD");
         $m_supplier = $supplier->setModel('supplier');
+        
+        $login_history = $tabs->addTab('Login History')->add("GRID");
+        $m_login_history = $login_history->setModel('LoginHistory');
+        
         $m_uom = $unit_of_measure->setModel('UnitOfMeasure');
         $m_usr = $user->setModel('User', array('username', 'email', 'isAdmin','store_search','pc_search'));
         $m_str = $stores->setModel('Stores');
@@ -141,7 +145,9 @@ class page_admin extends Page_ApplicationPage {
             $movement->addClass("zebra bordered");
             $movement->addPaginator(25);
         }
-        
+        if($login_history){
+            $login_history->addClass("zebra bordered");
+        }
     }
 
 }
