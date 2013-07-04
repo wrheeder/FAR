@@ -7,6 +7,7 @@ class ApplicationAuth extends BasicAuth {
 
         $this->usePasswordEncryption('md5');
         $model = $this->setModel('Model_User', 'username', 'password');
+        
     }
 
 //    function verifyCredentials($user, $password) {
@@ -26,7 +27,26 @@ class ApplicationAuth extends BasicAuth {
 //        }else
 //            return false;
 //    }
-
+    function verifyCredentials($user, $password) {
+        $valid = parent::verifyCredentials($user, $password);
+        if($valid){
+            $login_hist=$this->add('Model_LoginHistory');
+            $log = array('user_id'=>$valid,'action'=>'login','date'=>  date("Y-m-d H:i:s"),'ip'=>$this->getRealIpAddr());
+            $login_hist->set($log)->save();
+        }
+        return $valid;
+    }
+    
+    function logout() {
+        $user_id = $this->api->auth->get('id');
+        $valid = parent::logout();
+        if($valid){
+            $login_hist=$this->add('Model_LoginHistory');
+            $log = array('user_id'=>$user_id,'action'=>'logout','date'=>  date("Y-m-d H:i:s"),'ip'=>$this->getRealIpAddr());
+            $login_hist->set($log)->save();
+        }
+        return $valid;
+    }
     function isAdmin() {
         if ($this->get('isAdmin'))
             return true;
@@ -46,6 +66,19 @@ class ApplicationAuth extends BasicAuth {
             return true;
         else
             return false;
+    }
+
+    function getRealIpAddr() {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        //check ip from share internet
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        //to check ip is pass from proxy
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
     }
 
 }
