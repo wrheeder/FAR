@@ -150,7 +150,7 @@ class page_admin extends Page_ApplicationPage {
             if ($login_history) {
                 $login_history->addQuickSearch(array('user', 'date', 'ip'));
                 $login_history->getColumn('user')->makeSortable();
-                $login_history->dq->order('user asc');
+                $login_history->dq->order('date asc');
                 $login_history->addClass("zebra bordered");
                 $login_history->addPaginator(25);
             }
