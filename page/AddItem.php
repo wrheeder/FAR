@@ -1,4 +1,4 @@
-cd<?php
+<?php
 
 class Page_addItem extends Page {
 
