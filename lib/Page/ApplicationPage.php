@@ -9,7 +9,6 @@ class Page_ApplicationPage extends Page{
         {
             $this->api->template->set('Welcome','Logged In as '.$this->api->auth->get('username'));
         }
-            
         $this->api->template->set('run_time','Page Rendered in ...'.substr(microtime(true) - $_SERVER['REQUEST_TIME'],0,$this->dec).' seconds');
     }
 //    function render(){
@@ -20,3 +19,5 @@ class Page_ApplicationPage extends Page{
         $this->dec=$dec;
     }
 }
+
+
