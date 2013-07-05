@@ -1,4 +1,7 @@
 (function($) {
+    $(window).unload(function() {
+                alert('test');
+            });
     $.each({
         test: function(msg) {
 

@@ -57,7 +57,7 @@ class page_index extends Page_ApplicationPage {
         $this->api->jui->addStaticInclude('myJSFuncs');
         $tabs = $this->add('Tabs');
         
-
+        
 
 
         $form = $this->add('Form');
@@ -114,7 +114,6 @@ class page_index extends Page_ApplicationPage {
 //                    )))
 //                    ->execute();
 //        }
-
         if ($form->isSubmitted()) {
             $js = array();
 //            if ($sel_store->get() == '9999' || $sel_store->get() == '9998') {
