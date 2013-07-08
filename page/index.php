@@ -156,6 +156,7 @@ class page_index extends Page_ApplicationPage {
             $src[] = array('ids' => 9997, 'name' => 'Sites', 'rel' => 'root', 'parent_id' => null);
             $m_stores->unload();
             $m_stores->addCondition('store_type','Site');
+            $m_stores->dsql()->order('store_name asc');
 //            $m_home_store=$m_stores->load($this->home_store);
 //            $m_home_transit_store=$m_stores->load($m_home_store->get('parent_store_id'));
 //            $m_region_warehouse = $m_stores->load($m_home_transit_store->get('parent_store_id'));

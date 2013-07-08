@@ -12,7 +12,8 @@ class Page_PickList_TransferItem extends Page {
         $this->api->stickyGet('home_store');
         $this->api->stickyGet('home_store_type');
         $this->api->stickyGet('notes');
-
+        $this->api->stickyGet('store_type');
+        
         $f = $this->add('Form');
         $f->addField('Hidden', 'sel_store')->set($_GET['sel_store']);
         $f->addField('ReadOnlySave', 'tn_code')->set($_GET['tn_code']);
@@ -35,6 +36,7 @@ class Page_PickList_TransferItem extends Page {
         if($_GET['store_type']=='Regional Stock Van'){
             $m_stores = $this->add('Model_Stores');
             $m_stores->addCondition('store_type','Site');
+            $m_stores->dsql()->order('store_name asc');
             $sites = $m_stores->getRows();
             foreach($sites as $cur_site){
                 $dest_store_ids[] = $cur_site['id'];
