@@ -1,7 +1,7 @@
 <?php
 
 class page_index extends Page_ApplicationPage {
-
+    PUBLIC $isStockvan = false;
     public $home_store = null;
     public $home_store_type = null;
     public $transit_store = null;
@@ -70,8 +70,12 @@ class page_index extends Page_ApplicationPage {
         $m_stores = $this->add('Model_Stores');
         $tree = $search_fld_frm->add('jsTree/jsTree');
         $search_fld = $search_fld_frm->addField('line', 'search_fld')->set($_GET['search_fld'] ? $_GET['search_fld'] : 'None');
-        $search_fld_frm->addSubmit('Filter Sites');
+        $filter_subm=$search_fld_frm->addSubmit('Filter Sites');
         $this->loadTree($tree, $sel_store, $_GET['search_fld'] ? $_GET['search_fld'] : 'None');
+        if(!$this->isStockvan){
+          $search_fld->js(true)->closest('.atk-form-row')->hide();  
+          $filter_subm->js(true)->hide();  
+        }
         //die($this->transit_store);
         if ($_GET['sel_store']) {
             $sel_store->set($_GET['sel_store']);
@@ -163,6 +167,7 @@ class page_index extends Page_ApplicationPage {
         }
 
         if ($this->home_store_type == 'Regional Stock Van') {
+            $this->isStockvan=true;
             $src[] = array('ids' => 9997, 'name' => 'Sites', 'rel' => 'root', 'parent_id' => null);
             $m_stores->unload();
 //            $m_stores->debug();
