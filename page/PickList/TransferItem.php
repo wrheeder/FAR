@@ -32,11 +32,22 @@ class Page_PickList_TransferItem extends Page {
         foreach ($available_stores as $store_option) {
             $dest_store_ids[] = $store_option['stores_id'];
         }
+        if($_GET['store_type']=='Regional Stock Van'){
+            $m_stores = $this->add('Model_Stores');
+            $m_stores->addCondition('store_type','Site');
+            $sites = $m_stores->getRows();
+            foreach($sites as $cur_site){
+                $dest_store_ids[] = $cur_site['id'];
+            }
+        }
         $dest_stores = $this->add('Model_Stores');
         $dest_stores->addCondition('id', 'in', $dest_store_ids);
-        $dest_stores->addCondition('store_type', 'Regional Transit Store');
-
-
+        if($_GET['store_type']=='Regional Stock Van'){
+        $dest_stores->addCondition('store_type', array('Regional Transit Store','Site'));
+        }
+        else{
+          $dest_stores->addCondition('store_type', 'Regional Transit Store');  
+        }
 
         ////
 
