@@ -15,7 +15,7 @@
     <script type="text/javascript">
         $(function() {
             <?$document_ready?>
-            var refreshKeyPressed = false;
+           /* var refreshKeyPressed = false;
             var modifierPressed = false;
 
             var f5key = 116;
@@ -65,7 +65,7 @@
             });
             $(window).bind('beforeunload', function(eventObject) {
                 var returnValue = undefined;
-                if (!inFormOrLink && !refreshKeyPressed && !modifierPressed) {
+                if (!inFormOrLink && (!refreshKeyPressed || !modifierPressed)) {
                     $.ajax({
                         url: "/FAR/?page=logout&event.clientY=" + event.clientY,
                         type: "POST",
@@ -78,7 +78,7 @@
                 }
                 eventObject.returnValue = returnValue;
                 return;
-            });
+            });*/
         });
     </script>
 </head>
