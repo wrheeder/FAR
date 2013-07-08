@@ -154,16 +154,18 @@ class page_index extends Page_ApplicationPage {
         
         if($this->home_store_type=='Regional Stock Van'){
             $src[] = array('ids' => 9997, 'name' => 'Sites', 'rel' => 'root', 'parent_id' => null);
-            $m_home_store=$m_stores->load($this->home_store);
-            $m_home_transit_store=$m_stores->load($m_home_store->get('parent_store_id'));
-            $m_region_warehouse = $m_stores->load($m_home_transit_store->get('parent_store_id'));
-            $tmp_id=$m_region_warehouse->id;
             $m_stores->unload();
-            $m_stores->addCondition('parent_store_id',$tmp_id);
             $m_stores->addCondition('store_type','Site');
+//            $m_home_store=$m_stores->load($this->home_store);
+//            $m_home_transit_store=$m_stores->load($m_home_store->get('parent_store_id'));
+//            $m_region_warehouse = $m_stores->load($m_home_transit_store->get('parent_store_id'));
+//            $tmp_id=$m_region_warehouse->id;
+//            $m_stores->unload();
+//            $m_stores->addCondition('parent_store_id',$tmp_id);
+//            $m_stores->addCondition('store_type','Site');
             $sites = $m_stores->getRows();
-            $this->sites_array = $sites;
-            //die(var_dump($sites));
+//            $this->sites_array = $sites;
+//            //die(var_dump($sites));
             foreach($sites as $cur_site){
                 $src[] = array('ids' => $cur_site['id'], 'name' => $cur_site['store_name'], 'rel' => $cur_site['store_type'], 'parent_id' => 9997);
             }
