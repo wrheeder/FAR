@@ -36,7 +36,7 @@ class Page_PickList_TransferItem extends Page {
         if($_GET['store_type']=='Regional Stock Van'){
             $m_stores = $this->add('Model_Stores');
             $m_stores->addCondition('store_type','Site');
-            $m_stores->dsql()->order('store_name asc');
+            $m_stores->setOrder('store_name', 'asc');
             $sites = $m_stores->getRows();
             foreach($sites as $cur_site){
                 $dest_store_ids[] = $cur_site['id'];
