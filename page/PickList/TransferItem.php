@@ -13,59 +13,54 @@ class Page_PickList_TransferItem extends Page {
         $this->api->stickyGet('home_store_type');
         $this->api->stickyGet('notes');
         $this->api->stickyGet('store_type');
-        
         $f = $this->add('Form');
         $f->addField('Hidden', 'sel_store')->set($_GET['sel_store']);
         $f->addField('ReadOnlySave', 'tn_code')->set($_GET['tn_code']);
         $f->addField('Text', 'notes')->set($_GET['notes']);
-        //die(var_dump($f->getElement('tn_code')->get()));
         if (!$_GET['tn_code']) {
             $f->getElement('tn_code')->set(strtoupper(uniqid("TN" . date("ymd") . '_')));
         }
         $m_usr = $this->add("Model_User")->addCondition('id', $this->api->auth->model->id);
         $m_usr->loadAny();
         $m_reg_store = $m_usr->ref("UserStores");
-//        if ($_GET['Destination_Store']){
-//            $m_reg_store->addCondition('id',$_GET['Destination_Store']?);
-//        }
         $available_stores = $m_reg_store->getRows();
         $dest_store_ids = array();
         foreach ($available_stores as $store_option) {
             $dest_store_ids[] = $store_option['stores_id'];
         }
-        if($_GET['store_type']=='Regional Stock Van'){
+        if ($_GET['store_type'] == 'Regional Stock Van') {
             $m_stores = $this->add('Model_Stores');
-            $m_stores->addCondition('store_type','Site');
+            $m_stores->addCondition('store_type', 'Site');
             $m_stores->setOrder('store_name', 'asc');
             $sites = $m_stores->getRows();
-            foreach($sites as $cur_site){
+            foreach ($sites as $cur_site) {
                 $dest_store_ids[] = $cur_site['id'];
             }
         }
         $dest_stores = $this->add('Model_Stores');
         $dest_stores->addCondition('id', 'in', $dest_store_ids);
-        if($_GET['store_type']=='Regional Stock Van'){
-        $dest_stores->addCondition('store_type', array('Regional Transit Store','Site'));
+        if ($_GET['store_type'] == 'Regional Stock Van') {
+            $dest_stores->addCondition('store_type', array('Regional Transit Store', 'Site'));
+        } else {
+            $dest_stores->addCondition('store_type', 'Regional Transit Store');
         }
-        else{
-          $dest_stores->addCondition('store_type', 'Regional Transit Store');  
-        }
-
-        ////
-
         $out = array();
+
+        $m_locaters = $this->add('model_locators');
         if ($_GET['Destination_Store'] && !$_GET['dd_change']) {
-           foreach ($dest_stores as $dest_store) {
+            foreach ($dest_stores as $dest_store) {
                 if ($dest_store['id'] == $_GET['Destination_Store']) {
                     $out[$dest_store['id']] = $dest_store['store_name'];
                 }
-            } 
-        } else{
-            foreach ($dest_stores as $dest_store) {
-               // if ($dest_store['parent_store_id'] != $_GET['sel_store']) {
-                    $out[$dest_store['id']] = $dest_store['store_name'];
-               // }
             }
+//             $m_locaters->addCondition('stores_id',$_GET['Destination_Store']);
+        } else {
+            foreach ($dest_stores as $dest_store) {
+                // if ($dest_store['parent_store_id'] != $_GET['sel_store']) {
+                $out[$dest_store['id']] = $dest_store['store_name'];
+                // }
+            }
+//           $m_locaters->addCondition('stores_id',$_GET['Destination_Store']);
         }
         //loading sites
         $m_stores = $this->add('Model_Stores');
@@ -85,13 +80,20 @@ class Page_PickList_TransferItem extends Page {
         }
 
         //
-
+        //
+        
         $dd = $f->addField('Dropdown', 'Destination Store');
         $dd->setValueList($out);
-        if ($_GET['Destination_Store'])
+        if ($_GET['Destination_Store']) {
             $dd->set($_GET['Destination_Store']);
-        
-        
+            $m_locaters->addCondition('stores_id', $_GET['Destination_Store']);
+        } else {
+            reset($out);
+            $_GET['Destination_Store'] = key($out);
+            $m_locaters->addCondition('stores_id', $_GET['Destination_Store']);
+        }
+
+
 //if ($_GET['Destination_Store'])
         //$dd->js(true)->attr('disabled', true);
 //        $f->addField('Line', 'purchase_order')->set($_GET['purchase_order']);
@@ -104,7 +106,7 @@ class Page_PickList_TransferItem extends Page {
         $f->getElement('stores_id')->js(true)->closest('.atk-form-row-dropdown')->hide();
         $f->getElement('warrantee')->js(true)->closest('.atk-form-row')->hide();
         $f->getElement('version_fw')->js(true)->closest('.atk-form-row')->hide();
-        
+
 //        $f->getElement('locators')->js(true)->closest('.atk-form-row-line');
         $item_list = $this->add('Grid');
         $m_item_list = $this->add('Model_ItemTrfList');
@@ -124,44 +126,63 @@ class Page_PickList_TransferItem extends Page {
 
 
         $this->add('Button')->set('Save&Close Transfer Form')->js('click', $this->js()->trigger('reloadpage'))->univ()->closeDialog();
-        $dd->js('change',$f->js()->reload(array($this->api->url(),'Destination_Store'=>$dd->js()->val(),'dd_change'=>true)));
+        $dd->js('change', $f->js()->reload(array($this->api->url(), 'Destination_Store' => $dd->js()->val(), 'dd_change' => true)));
+
+        $icon = $f->getElement('qty')
+                ->add('Icon', null, 'after_field')
+                ->set('basic-group')
+                ->setStyle('margin-left', '10px')
+                ->setColor('red');
+
+
+        $icon->js(true)->hide();
+        $icon->js('click')->univ()->alert('test');
         ///Validation
         $locator = $f->getElement('locators');
         $locator->validateNotNull();
+//       
+
+        $locator_id = $f->getElement('locators_id');
+        $locator_id->set($m_locaters->tryLoadAny()->get('id'));
+
         $part_catalogue_id = $f->getElement('parts_catalogue_id');
         $serial = $f->getElement('serial');
         $serial->addHook('validate', function() use ($f, $serial, $part_catalogue_id) {
-                    $pc = $f->add('Model_PartsCatalogue');
+            $pc = $f->add('Model_PartsCatalogue');
 
-                    $pc->load($part_catalogue_id->get());
-                    if ($pc->get('serialized')) {
-                        if ($serial->get() == null) {
-                            $serial->displayFieldError('Serial Required for Serialized Part Numbers');
-                        } else {
-                            $item = $f->add('Model_Items')->addCondition('serial', $serial->get())->addCondition('parts_catalogue_id', $part_catalogue_id->get())->addCondition('stores_id', $f->get('sel_store'))->addCondition('part_status_id', $f->get('part_status_id'));
-                            $item->tryLoadAny();
-                            if (!$item->loaded()) {
-                                $serial->displayFieldError('Item with this serial or status does not exist in your store');
-                            }
+            $pc->load($part_catalogue_id->get());
+            if ($pc->get('serialized')) {
+                if ($serial->get() == null) {
+                    $serial->displayFieldError('Serial Required for Serialized Part Numbers');
+                } else {
+                    $item = $f->add('Model_Items')->addCondition('serial', $serial->get())->addCondition('parts_catalogue_id', $part_catalogue_id->get())->addCondition('stores_id', $f->get('sel_store'))->addCondition('part_status_id', $f->get('part_status_id'));
+                    $item->tryLoadAny();
+                    if (!$item->loaded()) {
+                        $serial->displayFieldError('Item with this serial or status does not exist in your store');
+                    }
+                }
+            } else {
+                if ($serial->get() != null)
+                    $serial->displayFieldError('Serial not required for Non Serialized Items');
+                else {
+                    $item = $f->add('Model_Items')->addCondition('parts_catalogue_id', $part_catalogue_id->get())->addCondition('stores_id', $f->get('sel_store'))->addCondition('part_status_id', $f->get('part_status_id'));
+                    $item->tryLoadAny();
+                    if ($item->loaded()) {
+                        if ($item->get('qty') < $f->getElement('qty')->get()) {
+                            $f->getElement('qty')->displayFieldError('Not enough of this item in Stock');
                         }
                     } else {
-                        if ($serial->get() != null)
-                            $serial->displayFieldError('Serial not required for Non Serialized Items');
-                        else {
-                            $item = $f->add('Model_Items')->addCondition('parts_catalogue_id', $part_catalogue_id->get())->addCondition('stores_id', $f->get('sel_store'))->addCondition('part_status_id', $f->get('part_status_id'));
-                            $item->tryLoadAny();
-                            if ($item->loaded()) {
-                                if ($item->get('qty') < $f->getElement('qty')->get()) {
-                                    $f->getElement('qty')->displayFieldError('Not enough of this item in Stock');
-                                }
-                            } else {
-                                $f->getElement('parts_catalogue')->displayFieldError('This item does not exist in your store');
-                            }
-                        }
+                        $f->getElement('parts_catalogue')->displayFieldError('This item does not exist in your store');
                     }
-                });
+                }
+            }
+        });
 
         ///End of Validation
+//        if(!$_GET['Destination_Store']){
+//            $_GET['Destination_Store']=$dd->get();
+//            $this->js()->reload();
+//        }
         $f->addSubmit('AddItem');
         if ($f->isSubmitted()) {
             //->js('click', $dd->js(true)->attr('disabled', false));
@@ -214,7 +235,7 @@ class Page_PickList_TransferItem extends Page {
             $f->js(true, $js)->univ()->successMessage('Item Added')->execute();
         }
         $js = array();
-        $js[] = $pc_info->js()->reload(array('Destination_Store' => $f->getElement('Destination_Store')->get(), 'part_num' => $f->getElement('parts_catalogue_id')->js()->val(), 'serial_fld' => $f->getElement('serial'), 'qty_fld' => $f->getElement('qty'), 'store_type' => $_GET['store_type'], 'home_store' => $_GET['home_store'], 'home_store_type' => $_GET['home_store_type']));
+        $js[] = $pc_info->js()->reload(array('Destination_Store' => $f->getElement('Destination_Store')->get(), 'part_num' => $f->getElement('parts_catalogue_id')->js()->val(), 'serial_fld' => $f->getElement('serial'), 'qty_fld' => $f->getElement('qty'), 'store_type' => $_GET['store_type'], 'home_store' => $_GET['home_store'], 'home_store_type' => $_GET['home_store_type'], 'icn_fld' => $icon));
         $this->js('myFunc', $js);
     }
 

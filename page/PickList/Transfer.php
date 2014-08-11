@@ -1,6 +1,6 @@
 <?php
 
-class Page_PickList_Transfer extends Page {
+class Page_PickList_Transfer extends Page_ApplicationPage {
 
     function init() {
         parent::init();

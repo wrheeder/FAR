@@ -1,0 +1,11 @@
+<Files ~ "^\.(htaccess|htpasswd)$">
+deny from all
+</Files>
+Options Indexes
+DirectoryIndex index.php       
+order deny,allow
+allow from localhost
+allow from ::1
+allow from 127.0.0.1
+allow from wbr-ubuntu.ZA.CellC.net
+allow from NB-M-IT9962.ZA.CellC.net

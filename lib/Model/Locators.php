@@ -2,6 +2,7 @@
 class Model_Locators extends Model_Table{
     
     public $entity_code = 'locators';
+    public $title_field = 'locator';
     
     function init() {
         parent::init();

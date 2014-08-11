@@ -59,14 +59,17 @@ class page_index extends Page_ApplicationPage {
         $tabs = $this->add('Tabs');
 
         $this->api->stickyGet('search_fld');
+        $this->api->stickyGet('home_store');
+        
+//        $this->api->stickyGet('sel_store');    
+
 
 
         $form = $this->add('Form');
         $form->js(true)->hide();
-        $sel_store = $form->addField('line', 'sel_store');
+        $sel_store = $form->addField('line', 'sel_store')->set($_GET['sel_store']);
         $search_fld_frm = $this->api->add('Form', null, 'search_fld');
-
-
+    
         $m_stores = $this->add('Model_Stores');
         $tree = $search_fld_frm->add('jsTree/jsTree');
         $search_fld = $search_fld_frm->addField('line', 'search_fld')->set($_GET['search_fld'] ? $_GET['search_fld'] : 'None');
@@ -80,7 +83,7 @@ class page_index extends Page_ApplicationPage {
         if ($_GET['sel_store']) {
             $sel_store->set($_GET['sel_store']);
             $m_stores->tryload($sel_store->get());
-            $browse_tab = $tabs->addTabURL($this->api->url('browseStore', array('sel_store' => $_GET['sel_store'], 'store_type' => $m_stores->get('store_type'), 'home_store' => $this->home_store, 'home_store_type' => $this->home_store_type)), 'Store Browser');
+            $browse_tab = $tabs->addTabURL($this->api->url('browseStore', array('sel_store' =>  $sel_store->get(), 'store_type' => $m_stores->get('store_type'), 'home_store' => $this->home_store, 'home_store_type' => $this->home_store_type,'home_transit'=>$this->transit_store)), 'Store Browser');
             $cur_store = $m_stores->get();
             if ($sel_store->get() == '9999' || $sel_store->get() == '9998' || $sel_store->get() == '9997') {
                 $tabs->js(true)->hide();
@@ -89,16 +92,16 @@ class page_index extends Page_ApplicationPage {
             }
             //$this->echo('$this->home_store_type');
             if ($_GET['sel_store'] == $this->home_store) {
-                $pick_list_tab = $tabs->addTabURL($this->api->url('PickList_Transfer', array('sel_store' => $_GET['sel_store'], 'store_type' => $m_stores->get('store_type'), 'home_store' => $this->home_store, 'home_store_type' => $this->home_store_type)), 'Transfer Equipment/Items');
+                $pick_list_tab = $tabs->addTabURL($this->api->url('PickList_Transfer', array('sel_store' => $sel_store->get(), 'store_type' => $m_stores->get('store_type'), 'home_store' => $this->home_store, 'home_store_type' => $this->home_store_type)), 'Transfer Equipment/Items');
                 if ($this->home_store_type != 'Regional Stock Van' && $this->home_store_type != 'National Stock Van') {
-                    $add_item_tab = $tabs->addTabURL($this->api->url('BookInEquipmentItems', array('sel_store' => $_GET['sel_store'], 'store_type' => $m_stores->get('store_type'), 'home_store' => $this->home_store, 'home_store_type' => $this->home_store_type)), 'Book In Equipment/Items');
+                    $add_item_tab = $tabs->addTabURL($this->api->url('BookInEquipmentItems', array('sel_store' => $sel_store->get(), 'store_type' => $m_stores->get('store_type'), 'home_store' => $this->home_store, 'home_store_type' => $this->home_store_type)), 'Book In Equipment/Items');
                 }
             } elseif ($_GET['sel_store'] == $this->transit_store) {
-                $pick_list_tab = $tabs->addTabURL($this->api->url('PickList_Collect', array('sel_store' => $_GET['sel_store'], 'store_type' => $m_stores->get('store_type'), 'home_store' => $this->home_store, 'home_store_type' => $this->home_store_type)), 'Collection PickList');
+                $pick_list_tab = $tabs->addTabURL($this->api->url('PickList_Collect', array('sel_store' => $sel_store->get(), 'store_type' => $m_stores->get('store_type'), 'home_store' => $this->home_store, 'home_store_type' => $this->home_store_type)), 'Collection PickList');
             } elseif ($cur_store['store_type'] == 'Site') {
-                $pick_list_tab = $tabs->addTabURL($this->api->url('PickList_Collect', array('sel_store' => $_GET['sel_store'], 'store_type' => 'Site', 'home_store' => $this->home_store, 'home_store_type' => $this->home_store_type)), 'Collection Equipment/Items');
+                $pick_list_tab = $tabs->addTabURL($this->api->url('PickList_Collect', array('sel_store' => $sel_store->get(), 'store_type' => 'Site', 'home_store' => $this->home_store, 'home_store_type' => $this->home_store_type)), 'Collection Equipment/Items');
                 // $pick_list_tab = $tabs->addTabURL($this->api->url('PickList_Transfer',array('sel_store'=>$_GET['sel_store'],'store_type'=>'Site','home_store'=>$this->home_store,'home_store_type'=>$this->home_store_type)), 'Transfer PickList');
-                $add_item_tab = $tabs->addTabURL($this->api->url('BookInEquipmentItems', array('sel_store' => $_GET['sel_store'], 'store_type' => $m_stores->get('store_type'), 'home_store' => $this->home_store, 'home_store_type' => $this->home_store_type)), 'Book In Equipment/Items');
+                $add_item_tab = $tabs->addTabURL($this->api->url('BookInEquipmentItems', array('sel_store' => $sel_store->get(), 'store_type' => $m_stores->get('store_type'), 'home_store' => $this->home_store, 'home_store_type' => $this->home_store_type)), 'Book In Equipment/Items');
             }
         } else {
             // $items->js(true)->hide();
@@ -130,11 +133,12 @@ class page_index extends Page_ApplicationPage {
 //            } else {
 //                $js[] = $items->js(true)->show();
 //            }
-            $js[] = $this->js()->reload(array('sel_store' => $sel_store->get(), 'search_fld' => $search_fld->get()));
+            $js[] = $this->js()->reload(array('sel_store' => $sel_store->js()->val()));//, 'search_fld' => $search_fld->get()
             $this->js(true, $js)->univ()->successMessage('Submitted')->execute();
         }
         if ($search_fld_frm->isSubmitted()) {
-            $js[] = $search_fld_frm->js()->reload(array('sel_store' => $sel_store->get(), 'search_fld' => $search_fld->get()));
+             $js = array();
+            $js[] = $search_fld_frm->js()->reload(array('sel_store' => $sel_store->js()->val()));//, 'search_fld' => $search_fld->get()
             $search_fld_frm->js(true, $js)->univ()->successMessage('Submitted')->execute();
         }
     }
@@ -173,7 +177,7 @@ class page_index extends Page_ApplicationPage {
 //            $m_stores->debug();
             if ($search_fld != "None")
                 
-                $m_stores->addCondition('store_type', 'Site'); {
+                $m_stores->addCondition('store_type', 'Site'); 
                 $m_stores->addCondition('store_name', 'like', '%'.$search_fld.'%');
 //                $m_stores->debug();
                 $m_stores->setOrder('store_name', 'asc');
@@ -192,7 +196,7 @@ class page_index extends Page_ApplicationPage {
             foreach ($sites as $cur_site) {
                 $src[] = array('ids' => $cur_site['id'], 'name' => $cur_site['store_name'], 'rel' => $cur_site['store_type'], 'parent_id' => 9997);
             }
-            }
+            
         }
         foreach ($src as &$str) {
             if ($str['ids'] != $home_store_id && $str['parent_id'] != $home_store_id && $str['rel'] != 'Site') {

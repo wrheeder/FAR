@@ -1,12 +1,13 @@
 <?php
 
-class Page_PickList_CollectItem extends Page {
+class Page_PickList_CollectItem extends Page_ApplicationPage {
 
     function init() {
         parent::init();
         $this->api->stickyGet('notes');
         $this->api->stickyGet('sel_store');
         $this->api->stickyGet('tn_code');
+        $this->api->stickyGet('notes');
         $this->api->stickyGet('Destination_Store');
          $this->api->stickyGet('home_store');
         $f = $this->add('Form');
@@ -62,6 +63,8 @@ class Page_PickList_CollectItem extends Page {
         
         $item_list = $this->add('Grid');
         $m_item_list = $this->add('Model_ItemTrfList');
+        $m_i = $m_item_list->join('items');
+        $m_i->addField('serial');
         $tn_code_id = $m_transfer_notes->getTransferFormId($f->getElement('tn_code')->get());
         $m_item_list->addCondition('transfer_notes_id', $tn_code_id);
         $item_list->setModel($m_item_list);

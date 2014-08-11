@@ -1,6 +1,6 @@
 <?php
 
-class Page_PickList_Collect extends Page {
+class Page_PickList_Collect extends Page_ApplicationPage {
 
     function init() {
         parent::init();
