@@ -55,7 +55,7 @@ class page_index extends Page_ApplicationPage {
 
     function init() {
         parent::init();
-        $this->api->jui->addStaticInclude('myJSFuncs');
+//        $this->api->jui->addStaticInclude('myJSFuncs');
         $tabs = $this->add('Tabs');
 
         $this->api->stickyGet('search_fld');
