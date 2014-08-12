@@ -1,6 +1,6 @@
 (function($) {
     $(window).unload(function() {
-                alert('test');
+//                alert('test');
             });
     $.each({
         test: function(msg) {
